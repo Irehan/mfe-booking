@@ -1,14 +1,28 @@
+// packages/booking/src/bootstrap.tsx
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router } from 'react-router-dom';
 import App from './App';
 import './App.css';
 
+const ENV_REGISTRY =
+  (typeof process !== 'undefined' && (process as any)?.env?.VITE_REGISTRY_URL) ||
+  (typeof import.meta !== 'undefined' &&
+    (import.meta as any)?.env?.DEV &&
+    (import.meta as any)?.env?.VITE_REGISTRY_URL) ||
+  '';
+
 const REGISTRY_URL =
-  (typeof import.meta !== 'undefined' && (import.meta as any)?.env?.VITE_REGISTRY_URL) ??
-  'http://localhost:4000/registry';
+  ENV_REGISTRY ||
+  ((typeof import.meta !== 'undefined' && (import.meta as any)?.env?.DEV)
+    ? 'http://localhost:4000/registry'
+    : '');
 
 async function selfRegister() {
+  if (!REGISTRY_URL) {
+    console.log('ℹ️ Registry not configured; skipping booking self-register.');
+    return;
+  }
   try {
     const res = await fetch('/plugin-manifest.json', { cache: 'no-store' });
     if (!res.ok) throw new Error('manifest not found');
