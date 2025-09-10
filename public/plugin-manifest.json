@@ -1,0 +1,9 @@
+{
+  "name": "booking-app",
+  "displayName": "Booking Management",
+  "scope": "bookingApp",
+  "url": "http://localhost:3002/remoteEntry.js",
+  "routes": ["/bookings"],
+  "roles": ["admin"],
+  "modules": ["./BookingList", "./BookingForm"]
+}
