@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { ModuleFederationPlugin } = require('webpack').container;
+const webpack = require('webpack');
 
 const isDev = process.env.NODE_ENV !== 'production';
 
@@ -29,6 +30,9 @@ module.exports = {
       template: path.resolve(__dirname, 'public/index.html'),
       cache: false
     }),
+    new webpack.EnvironmentPlugin({
+    VITE_REGISTRY_URL: ''  // makes process.env.VITE_REGISTRY_URL available in browser
+  }),
     new ModuleFederationPlugin({
       name: 'bookingApp',
       filename: 'remoteEntry.js',
