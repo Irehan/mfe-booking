@@ -2,8 +2,8 @@
   "name": "booking-app",
   "displayName": "Booking Management",
   "scope": "bookingApp",
-  "url": "http://localhost:3002/remoteEntry.js",
-  "routes": ["/bookings"],
-  "roles": ["admin"],
+  "url": "https://arh-mfe-booking.vercel.app/remoteEntry.js",
+  "routes": ["/bookings", "/book"],
+  "roles": ["user", "admin"],
   "modules": ["./BookingList", "./BookingForm"]
 }

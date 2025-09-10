@@ -1,7 +1,9 @@
+// packages/booking/webpack.config.js
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { ModuleFederationPlugin } = require('webpack').container;
 const webpack = require('webpack');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const isDev = process.env.NODE_ENV !== 'production';
 
@@ -16,9 +18,7 @@ module.exports = {
     clean: true
   },
   devtool: isDev ? 'eval-cheap-module-source-map' : 'source-map',
-  resolve: {
-    extensions: ['.tsx', '.ts', '.jsx', '.js']
-  },
+  resolve: { extensions: ['.tsx', '.ts', '.jsx', '.js'] },
   module: {
     rules: [
       { test: /\.tsx?$/, loader: 'ts-loader', exclude: /node_modules/ },
@@ -26,13 +26,9 @@ module.exports = {
     ]
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, 'public/index.html'),
-      cache: false
-    }),
-    new webpack.EnvironmentPlugin({
-    VITE_REGISTRY_URL: ''  // makes process.env.VITE_REGISTRY_URL available in browser
-  }),
+    new HtmlWebpackPlugin({ template: path.resolve(__dirname, 'public/index.html'), cache: false }),
+    new webpack.EnvironmentPlugin({ VITE_REGISTRY_URL: '' }),
+    new CopyWebpackPlugin({ patterns: [{ from: path.resolve(__dirname, 'public'), to: '.' }] }),
     new ModuleFederationPlugin({
       name: 'bookingApp',
       filename: 'remoteEntry.js',
@@ -51,17 +47,8 @@ module.exports = {
     port: 3002,
     hot: true,
     historyApiFallback: true,
-    static: {
-      directory: path.resolve(__dirname, 'public'),
-      watch: true
-    },
-    headers: {
-      'Cache-Control': 'no-store'
-    },
-    client: {
-      overlay: true,
-      progress: false,
-      logging: 'info'
-    }
+    static: { directory: path.resolve(__dirname, 'public'), watch: true },
+    headers: { 'Cache-Control': 'no-store' },
+    client: { overlay: true, progress: false, logging: 'info' }
   }
 };
