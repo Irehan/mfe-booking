@@ -15,33 +15,46 @@ module.exports = {
     publicPath: 'auto',
     filename: isDev ? '[name].js' : '[name].[contenthash].js',
     chunkFilename: isDev ? '[name].js' : '[name].[contenthash].js',
-    clean: true
+    clean: true,
   },
   devtool: isDev ? 'eval-cheap-module-source-map' : 'source-map',
   resolve: { extensions: ['.tsx', '.ts', '.jsx', '.js'] },
   module: {
     rules: [
       { test: /\.tsx?$/, loader: 'ts-loader', exclude: /node_modules/ },
-      { test: /\.css$/, use: ['style-loader', 'css-loader'] }
-    ]
+      { test: /\.css$/, use: ['style-loader', 'css-loader'] },
+    ],
   },
   plugins: [
-    new HtmlWebpackPlugin({ template: path.resolve(__dirname, 'public/index.html'), cache: false }),
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, 'public/index.html'),
+      filename: 'index.html',
+      cache: false,
+    }),
     new webpack.EnvironmentPlugin({ VITE_REGISTRY_URL: '' }),
-    new CopyWebpackPlugin({ patterns: [{ from: path.resolve(__dirname, 'public'), to: '.' }] }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, 'public'),
+          to: '.',
+          globOptions: { ignore: ['**/index.html'] },
+          noErrorOnMissing: true,
+        },
+      ],
+    }),
     new ModuleFederationPlugin({
       name: 'bookingApp',
       filename: 'remoteEntry.js',
       exposes: {
         './BookingList': './src/components/BookingList.tsx',
-        './BookingForm': './src/components/BookingForm.tsx'
+        './BookingForm': './src/components/BookingForm.tsx',
       },
       shared: {
         react: { singleton: true, requiredVersion: false },
         'react-dom': { singleton: true, requiredVersion: false },
-        'react-router-dom': { singleton: true, requiredVersion: false }
-      }
-    })
+        'react-router-dom': { singleton: true, requiredVersion: false },
+      },
+    }),
   ],
   devServer: {
     port: 3002,
@@ -49,6 +62,6 @@ module.exports = {
     historyApiFallback: true,
     static: { directory: path.resolve(__dirname, 'public'), watch: true },
     headers: { 'Cache-Control': 'no-store' },
-    client: { overlay: true, progress: false, logging: 'info' }
-  }
+    client: { overlay: true, progress: false, logging: 'info' },
+  },
 };
