@@ -1,4 +1,4 @@
-// packages/booking/src/components/BookingForm.tsx
+
 import React, { useState } from 'react';
 import './Booking.css';
 
@@ -13,7 +13,6 @@ interface BookingFormData {
   specialRequirements: string;
 }
 
-// Create a separate interface for form errors
 interface BookingFormErrors {
   facilityName?: string;
   bookingDate?: string;
@@ -51,7 +50,6 @@ const BookingForm: React.FC<BookingFormProps> = ({ user, onBookingSubmit }) => {
   const [errors, setErrors] = useState<BookingFormErrors>({});
   const [success, setSuccess] = useState(false);
 
-  // Available facilities
   const facilities = [
     'Conference Room A (8 people)',
     'Conference Room B (12 people)', 
@@ -72,7 +70,6 @@ const BookingForm: React.FC<BookingFormProps> = ({ user, onBookingSubmit }) => {
       [name]: name === 'attendees' ? parseInt(value) || 1 : value
     }));
     
-    // Clear error when user starts typing
     if (errors[name as keyof BookingFormErrors]) {
       setErrors(prev => ({
         ...prev,
@@ -139,15 +136,10 @@ const BookingForm: React.FC<BookingFormProps> = ({ user, onBookingSubmit }) => {
     setIsSubmitting(true);
     
     try {
-      // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 2000));
       
       console.log('📋 Booking submitted:', formData);
-      
-      // Call the callback if provided
       onBookingSubmit?.(formData);
-      
-      // Emit event for cross-app communication
       if (typeof window !== 'undefined' && (window as any).eventBus) {
         (window as any).eventBus.emit('booking:created', {
           payload: {
@@ -161,8 +153,6 @@ const BookingForm: React.FC<BookingFormProps> = ({ user, onBookingSubmit }) => {
       }
       
       setSuccess(true);
-      
-      // Reset form after success
       setTimeout(() => {
         setFormData({
           facilityName: '',

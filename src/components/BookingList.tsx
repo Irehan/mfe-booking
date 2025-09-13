@@ -1,4 +1,3 @@
-// D:\web-dev\react-practice\mfe-demo\packages\booking\src\components\BookingList.tsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './BookingList.css';
@@ -26,7 +25,6 @@ const BookingList: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // Mock data
   const mockBookings: Booking[] = [
     {
       id: 'BK001',
@@ -98,17 +96,14 @@ const BookingList: React.FC = () => {
   ];
 
   useEffect(() => {
-    // Simulate API call
     const loadBookings = async () => {
       setLoading(true);
       try {
-        // Get bookings from localStorage or use mock data
         const storedBookings = localStorage.getItem('bookings');
         const allBookings = storedBookings 
           ? [...JSON.parse(storedBookings), ...mockBookings]
           : mockBookings;
         
-        // Remove duplicates based on ID
         const uniqueBookings = allBookings.filter((booking, index, self) =>
           index === self.findIndex((b) => b.id === booking.id)
         );
@@ -129,13 +124,9 @@ const BookingList: React.FC = () => {
 
   useEffect(() => {
     let filtered = [...bookings];
-
-    // Apply status filter
     if (statusFilter !== 'all') {
       filtered = filtered.filter(booking => booking.status === statusFilter);
     }
-
-    // Apply search filter
     if (searchTerm) {
       filtered = filtered.filter(booking =>
         booking.facilityName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -178,8 +169,6 @@ const BookingList: React.FC = () => {
       booking.id === bookingId ? { ...booking, status: newStatus } : booking
     );
     setBookings(updatedBookings);
-    
-    // Update localStorage
     const storedBookings = localStorage.getItem('bookings');
     if (storedBookings) {
       const parsed = JSON.parse(storedBookings);
